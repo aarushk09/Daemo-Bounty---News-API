@@ -12,17 +12,20 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "axios": "^1.6.7",
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
     "daemo-engine": "^0.2.4",
     "dotenv": "^16.4.5",
+    "express": "^5.2.1",
     "reflect-metadata": "^0.2.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^20.11.19",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }
-

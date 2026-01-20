@@ -8,11 +8,13 @@ An AI news brief agent that summarizes breaking news relevant to specific indust
 
 ```
 .
+├── public/
+│   └── index.html            # Frontend web interface
 ├── src/
 │   ├── services/
 │   │   └── MyFunctions.ts    # Contains Daemo tools/functions (News API integration)
 │   ├── env.example           # Template for environment variables
-│   └── index.ts              # Entry point connecting to Daemo
+│   └── index.ts              # Entry point (Express server + Daemo agent)
 ├── package.json
 └── README.md
 ```
@@ -24,6 +26,10 @@ The agent provides the following capabilities:
 - **Search News**: Find articles about specific topics, companies, or industries
 - **Company News Monitor**: Track news about specific companies with date filtering
 - **News Briefs**: Generate summarized alerts about relevant news
+
+## Website UI
+
+A sleek web dashboard has been added to see the agent in action. After starting the server, visit `http://localhost:3000` to access the interactive interface where you can browse headlines, search news, track companies, and view AI-generated briefs in real-time.
 
 ## Setup
 
@@ -50,6 +56,8 @@ The agent provides the following capabilities:
    ```bash
    npm start
    ```
+   
+   This starts the Express server on `http://localhost:3000` and connects the Daemo agent.
 
 ## API Keys
 

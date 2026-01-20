@@ -24,6 +24,7 @@ interface NewsApiResponse {
 
 export class NewsService {
   private apiKey: string;
+  public static recentBriefs: { summary: string; priority: string; timestamp: string }[] = [];
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
@@ -214,6 +215,18 @@ export class NewsService {
     console.log('─'.repeat(80));
     console.log(args.summary);
     console.log('─'.repeat(80) + '\n');
+    
+    // Store for frontend
+    NewsService.recentBriefs.unshift({
+      summary: args.summary,
+      priority: args.priority || 'medium',
+      timestamp
+    });
+    
+    // Keep only last 10
+    if (NewsService.recentBriefs.length > 10) {
+      NewsService.recentBriefs.pop();
+    }
     
     return { success: true, timestamp };
   }
