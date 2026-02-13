@@ -30,7 +30,6 @@
 </head>
 <body class="text-slate-900">
     <div class="min-h-screen flex flex-col">
-        <!-- Navigation -->
         <nav class="sticky top-0 z-50 glass border-b border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
@@ -57,10 +56,46 @@
             </div>
         </nav>
 
+        <div id="chatContainer" class="fixed bottom-6 right-6 z-50 hidden md:block">
+            <div id="chatWindow" class="hidden bg-white rounded-3xl shadow-2xl border border-slate-200 w-96 h-[600px] flex flex-col">
+                <div class="bg-indigo-600 text-white p-4 rounded-t-3xl flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <span class="font-bold">Chat with Agent</span>
+                    </div>
+                    <button onclick="toggleChat()" class="text-white hover:text-indigo-200 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="bot" class="w-4 h-4 text-indigo-600"></i>
+                        </div>
+                        <div class="flex-1 bg-white p-3 rounded-2xl rounded-tl-sm shadow-sm">
+                            <p class="text-sm text-slate-700">Hi! I'm your news assistant. Ask me anything about current events, search for news, or track companies.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-200 bg-white rounded-b-3xl">
+                    <div class="flex gap-2">
+                        <input type="text" id="chatInput" placeholder="Type your message..." 
+                            class="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                            onkeypress="handleChatKeyPress(event)">
+                        <button onclick="sendChatMessage()" id="chatSendBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <button onclick="clearChat()" class="mt-2 text-xs text-slate-500 hover:text-slate-700 transition-colors">Clear conversation</button>
+                </div>
+            </div>
+            <button onclick="toggleChat()" id="chatToggleBtn" class="bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all hover:scale-110">
+                <i data-lucide="message-circle" class="w-6 h-6"></i>
+            </button>
+        </div>
+
         <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- Main Content Area -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="flex items-center justify-between">
                         <h2 id="sectionTitle" class="text-2xl font-bold text-slate-800 flex items-center gap-2">
@@ -69,9 +104,7 @@
                         </h2>
                         <span id="resultCount" class="text-sm text-slate-500 font-medium bg-slate-100 px-3 py-1 rounded-full">Loading...</span>
                     </div>
-
                     <div id="newsGrid" class="grid grid-cols-1 gap-6">
-                        <!-- News cards will be injected here -->
                         <div class="animate-pulse flex space-x-4 p-6 bg-white rounded-2xl border border-slate-100">
                             <div class="rounded-lg bg-slate-200 h-24 w-32"></div>
                             <div class="flex-1 space-y-4 py-1">
@@ -85,7 +118,6 @@
                     </div>
                 </div>
 
-                <!-- Sidebar / Agent Briefs -->
                 <div class="space-y-6">
                     <div class="bg-indigo-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
                         <div class="relative z-10">
@@ -109,7 +141,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Decorative circle -->
                         <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500 rounded-full opacity-20 blur-3xl"></div>
                     </div>
 
@@ -119,7 +150,6 @@
                             Recent Briefs
                         </h3>
                         <div id="briefsContainer" class="space-y-4">
-                            <!-- Briefs will be injected here -->
                             <p class="text-slate-500 text-sm italic">Waiting for agent activity...</p>
                         </div>
                     </div>
@@ -137,6 +167,19 @@
                             </button>
                         </div>
                     </div>
+
+                    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="text-indigo-600 w-5 h-5"></i>
+                            Advanced Insights
+                        </h3>
+                        <div class="space-y-2">
+                            <button onclick="runIndustryPulse()" class="w-full text-left px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm">industry pulse</button>
+                            <button onclick="runCompanyCompare()" class="w-full text-left px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm">compare companies</button>
+                            <button onclick="runMarketMovers()" class="w-full text-left px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm">market movers</button>
+                        </div>
+                        <pre id="insightsOutput" class="mt-3 bg-slate-900 text-slate-100 text-xs rounded-xl p-3 max-h-44 overflow-auto whitespace-pre-wrap">click an insight to load data...</pre>
+                    </div>
                 </div>
             </div>
         </main>
@@ -153,7 +196,6 @@
     </div>
 
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
 
         const newsGrid = document.getElementById('newsGrid');
@@ -162,36 +204,25 @@
         const searchInput = document.getElementById('searchInput');
         const companyInput = document.getElementById('companyInput');
         const briefsContainer = document.getElementById('briefsContainer');
+        const insightsOutput = document.getElementById('insightsOutput');
 
+        // fetches news headlines by category
         async function fetchHeadlines(category = 'general') {
             try {
-                newsGrid.innerHTML = `
-                    <div class="animate-pulse space-y-6">
-                        ${Array(3).fill(0).map(() => `
-                            <div class="flex space-x-4 p-6 bg-white rounded-2xl border border-slate-100">
-                                <div class="rounded-lg bg-slate-100 h-24 w-32"></div>
-                                <div class="flex-1 space-y-4 py-1">
-                                    <div class="h-4 bg-slate-200 rounded w-3/4"></div>
-                                    <div class="h-4 bg-slate-100 rounded"></div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                
+                newsGrid.innerHTML = `<div class="animate-pulse space-y-6">${Array(3).fill(0).map(() => `<div class="flex space-x-4 p-6 bg-white rounded-2xl border border-slate-100"><div class="rounded-lg bg-slate-100 h-24 w-32"></div><div class="flex-1 space-y-4 py-1"><div class="h-4 bg-slate-200 rounded w-3/4"></div><div class="h-4 bg-slate-100 rounded"></div></div></div>`).join('')}</div>`;
                 const response = await fetch(`/api/headlines?category=${category}`);
                 const data = await response.json();
-                
                 sectionTitle.innerHTML = `<i data-lucide="trending-up" class="text-indigo-600"></i> ${category.charAt(0).toUpperCase() + category.slice(1)} Headlines`;
                 resultCount.textContent = `${data.totalResults} results`;
                 renderArticles(data.articles);
                 lucide.createIcons();
             } catch (error) {
-                console.error('Error:', error);
+                console.error('error:', error);
                 newsGrid.innerHTML = '<p class="text-red-500 p-6">Failed to load news. Please try again later.</p>';
             }
         }
 
+        // searches for news based on query string
         async function searchNews(query) {
             try {
                 const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
@@ -201,10 +232,11 @@
                 renderArticles(data.articles);
                 lucide.createIcons();
             } catch (error) {
-                console.error('Error:', error);
+                console.error('error:', error);
             }
         }
 
+        // fetches news for a specific company
         async function searchCompany() {
             const company = companyInput.value;
             if (!company) return;
@@ -216,79 +248,37 @@
                 renderArticles(data.articles);
                 lucide.createIcons();
             } catch (error) {
-                console.error('Error:', error);
+                console.error('error:', error);
             }
         }
 
+        // renders article cards to the grid
         function renderArticles(articles) {
             if (!articles || articles.length === 0) {
                 newsGrid.innerHTML = '<div class="p-12 text-center text-slate-500 bg-white rounded-3xl border border-slate-100">No articles found.</div>';
                 return;
             }
-
-            newsGrid.innerHTML = articles.map(article => `
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm card-hover flex flex-col md:flex-row gap-6">
-                    <div class="flex-grow">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wide">${article.source}</span>
-                            <span class="text-xs text-slate-400 font-medium">${new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-slate-800 leading-tight">
-                            <a href="${article.url}" target="_blank" class="hover:text-indigo-600 transition-colors">${article.title}</a>
-                        </h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-4 line-clamp-2">${article.description || 'No description available.'}</p>
-                        <div class="flex items-center justify-between mt-auto">
-                            <span class="text-xs text-slate-400">By <span class="text-slate-600 font-medium">${article.author || 'Unknown'}</span></span>
-                            <a href="${article.url}" target="_blank" class="text-indigo-600 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">
-                                Read more <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            newsGrid.innerHTML = articles.map(article => `<div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm card-hover flex flex-col md:flex-row gap-6"><div class="flex-grow"><div class="flex items-center gap-2 mb-3"><span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wide">${article.source}</span><span class="text-xs text-slate-400 font-medium">${new Date(article.publishedAt).toLocaleDateString()}</span></div><h3 class="text-xl font-bold mb-2 text-slate-800 leading-tight"><a href="${article.url}" target="_blank" class="hover:text-indigo-600 transition-colors">${article.title}</a></h3><p class="text-slate-600 text-sm leading-relaxed mb-4 line-clamp-2">${article.description || ''}</p><div class="flex items-center justify-between mt-auto"><span class="text-xs text-slate-400">By <span class="text-slate-600 font-medium">${article.author || 'Unknown'}</span></span><a href="${article.url}" target="_blank" class="text-indigo-600 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Read more <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div></div>`).join('');
         }
 
         searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && searchInput.value) {
-                searchNews(searchInput.value);
-            }
+            if (e.key === 'Enter' && searchInput.value) searchNews(searchInput.value);
         });
 
-        // Initialize with top headlines
         fetchHeadlines();
 
-        // WebSocket or Polling for briefs (simulated for now)
+        // handles displaying news briefs
         function addBrief(text, priority = 'medium') {
-            const colors = {
-                low: 'bg-blue-50 border-blue-100 text-blue-800',
-                medium: 'bg-indigo-50 border-indigo-100 text-indigo-800',
-                high: 'bg-rose-50 border-rose-100 text-rose-800'
-            };
-            
+            const colors = { low: 'bg-blue-50 border-blue-100 text-blue-800', medium: 'bg-indigo-50 border-indigo-100 text-indigo-800', high: 'bg-rose-50 border-rose-100 text-rose-800' };
             const div = document.createElement('div');
             div.className = `p-4 rounded-2xl border ${colors[priority]} text-sm leading-relaxed animate-in fade-in slide-in-from-right-4 duration-500`;
-            div.innerHTML = `
-                <div class="flex items-center gap-2 mb-1 font-bold text-xs uppercase">
-                    <i data-lucide="${priority === 'high' ? 'alert-circle' : 'info'}" class="w-3.5 h-3.5"></i>
-                    ${priority} Priority
-                </div>
-                ${text}
-            `;
-            
-            if (briefsContainer.querySelector('p')) {
-                briefsContainer.innerHTML = '';
-            }
-            
+            div.innerHTML = `<div class="flex items-center gap-2 mb-1 font-bold text-xs uppercase"><i data-lucide="${priority === 'high' ? 'alert-circle' : 'info'}" class="w-3.5 h-3.5"></i>${priority} Priority</div>${text}`;
+            if (briefsContainer.querySelector('p')) briefsContainer.innerHTML = '';
             briefsContainer.prepend(div);
             lucide.createIcons();
-            
-            // Limit to 5 briefs
-            if (briefsContainer.children.length > 5) {
-                briefsContainer.lastElementChild.remove();
-            }
+            if (briefsContainer.children.length > 5) briefsContainer.lastElementChild.remove();
         }
 
-        // Check for updates every 10 seconds
         async function fetchBriefs() {
             try {
                 const response = await fetch('/api/briefs');
@@ -299,9 +289,143 @@
                 }
             } catch (e) {}
         }
-
         setInterval(fetchBriefs, 5000);
+
+        async function runIndustryPulse() {
+            const industry = prompt('industry/topic (e.g. fintech, ai, cybersecurity):');
+            if (!industry) return;
+            insightsOutput.textContent = 'loading industry pulse...';
+            try {
+                const response = await fetch(`/api/insights/industry-pulse?industry=${encodeURIComponent(industry)}&days=7`);
+                const data = await response.json();
+                insightsOutput.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                insightsOutput.textContent = 'failed to load industry pulse';
+            }
+        }
+
+        async function runCompanyCompare() {
+            const companyA = prompt('first company:');
+            if (!companyA) return;
+            const companyB = prompt('second company:');
+            if (!companyB) return;
+            insightsOutput.textContent = 'loading company comparison...';
+            try {
+                const response = await fetch(`/api/insights/compare-companies?companyA=${encodeURIComponent(companyA)}&companyB=${encodeURIComponent(companyB)}&days=7`);
+                const data = await response.json();
+                insightsOutput.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                insightsOutput.textContent = 'failed to compare companies';
+            }
+        }
+
+        async function runMarketMovers() {
+            insightsOutput.textContent = 'loading market movers...';
+            try {
+                const response = await fetch('/api/insights/market-movers?days=3');
+                const data = await response.json();
+                insightsOutput.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                insightsOutput.textContent = 'failed to load market movers';
+            }
+        }
+
+        // chat logic for communicating with the daemo agent
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatToggleBtn = document.getElementById('chatToggleBtn');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const userId = 'user_' + Date.now();
+
+        function toggleChat() {
+            if (chatWindow.classList.contains('hidden')) {
+                chatWindow.classList.remove('hidden');
+                chatToggleBtn.classList.add('hidden');
+                chatInput.focus();
+            } else {
+                chatWindow.classList.add('hidden');
+                chatToggleBtn.classList.remove('hidden');
+            }
+            lucide.createIcons();
+        }
+
+        function addChatMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`;
+            if (isUser) {
+                messageDiv.innerHTML = `<div class="flex-1 bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-sm shadow-sm"><p class="text-sm">${escapeHtml(content)}</p></div><div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i></div>`;
+            } else {
+                messageDiv.innerHTML = `<div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0"><i data-lucide="bot" class="w-4 h-4 text-indigo-600"></i></div><div class="flex-1 bg-white p-3 rounded-2xl rounded-tl-sm shadow-sm"><p class="text-sm text-slate-700 whitespace-pre-wrap">${formatMessage(content)}</p></div>`;
+            }
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function formatMessage(text) {
+            return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function sendChatMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            addChatMessage(message, true);
+            chatInput.value = '';
+            chatSendBtn.disabled = true;
+            chatSendBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>';
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'flex items-start gap-3';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `<div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0"><i data-lucide="bot" class="w-4 h-4 text-indigo-600"></i></div><div class="flex-1 bg-white p-3 rounded-2xl rounded-tl-sm shadow-sm"><div class="flex gap-1"><div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div><div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div></div></div>`;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            lucide.createIcons();
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 120000);
+                const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, userId }), signal: controller.signal });
+                clearTimeout(timeoutId);
+                const data = await response.json();
+                document.getElementById('typing-indicator')?.remove();
+                const reply = data.response || data.message || 'no response received from agent.';
+                addChatMessage(reply, false);
+            } catch (error) {
+                document.getElementById('typing-indicator')?.remove();
+                addChatMessage(error.name === 'AbortError' ? 'request took too long; try a simpler question.' : 'error: failed to process message.', false);
+            } finally {
+                chatSendBtn.disabled = false;
+                chatSendBtn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i>';
+                lucide.createIcons();
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        async function clearChat() {
+            if (confirm('clear conversation history?')) {
+                try {
+                    await fetch('/api/chat/clear', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId }) });
+                    chatMessages.innerHTML = `<div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0"><i data-lucide="bot" class="w-4 h-4 text-indigo-600"></i></div><div class="flex-1 bg-white p-3 rounded-2xl rounded-tl-sm shadow-sm"><p class="text-sm text-slate-700">Hi! I'm your news assistant. Ask me anything about current events, search for news, or track companies.</p></div></div>`;
+                    lucide.createIcons();
+                } catch (error) {
+                    console.error('error clearing chat:', error);
+                }
+            }
+        }
+
+        if (window.innerWidth < 768) setTimeout(() => toggleChat(), 1000);
     </script>
 </body>
 </html>
-
